@@ -6,7 +6,7 @@ const Charts = React.lazy(() => import('./views/charts/Charts'))
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/ui-development', name: 'ui-development', element: UiDevelopment },
-  { path: '/charts', name: 'Charts', element: Charts },
+  // { path: '/charts', name: 'Charts', element: Charts },
 ]
 
 export default routes
