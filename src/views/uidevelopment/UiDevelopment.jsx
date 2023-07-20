@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import * as XLSX from 'xlsx'
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 import {
   CCard,
@@ -10,6 +11,12 @@ import { CChartBar } from '@coreui/react-chartjs'
 const UiDevelopment = () => {
 
   const [chartDatas, setChartDatas] = useState({});
+
+  console.log("ChartDataLabels", ChartDataLabels);
+  ChartDataLabels.defaults.color = "white"
+  ChartDataLabels.defaults.offset = 0
+  ChartDataLabels.defaults.padding.left = 0;
+  ChartDataLabels.defaults.padding.right = 0;
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];

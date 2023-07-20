@@ -6,6 +6,7 @@ import { CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler } from '@coreui/r
 import { AppSidebarNav } from './AppSidebarNav'
 
 import logo from 'src/assets/brand/logo.png'
+import logoNarrow from 'src/assets/brand/logo-narrow.png'
 
 import SimpleBar from 'simplebar-react'
 import 'simplebar/dist/simplebar.min.css'
@@ -28,7 +29,8 @@ const AppSidebar = () => {
       }}
     >
       <CSidebarBrand className="d-none d-md-flex" to="/">
-        <img src={logo} height={35}/>
+        <img className="sidebar-brand-full" src={logo} height={35}/>
+        <img className="sidebar-brand-narrow" src={logoNarrow} height={35}/>
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar>
