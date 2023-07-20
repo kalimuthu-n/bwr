@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import * as XLSX from 'xlsx'
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import isEmpty from "lodash-es/isEmpty";
 
 import {
   CCard,
   CCardBody,
   CFormSelect,
+  CTooltip,
 } from '@coreui/react'
 import { CChartBar } from '@coreui/react-chartjs'
 
@@ -85,6 +87,7 @@ const UiDevelopment = () => {
           <div className="ms-2">
             <CFormSelect
               aria-label="Default select example"
+              disabled={isEmpty(chartDatas)}
               options={[
                 'Open this select menu',
                 { label: 'Planned And DevDone', value: 'planned_and_devdone' },
