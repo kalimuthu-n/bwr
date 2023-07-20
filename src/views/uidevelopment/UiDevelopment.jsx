@@ -12,6 +12,7 @@ import { CChartBar } from '@coreui/react-chartjs'
 const UiDevelopment = () => {
 
   const [chartDatas, setChartDatas] = useState({});
+  const [reportType, setReportType] = useState(null);
 
   console.log("ChartDataLabels", ChartDataLabels);
   ChartDataLabels.defaults.color = "white"
@@ -71,64 +72,43 @@ const UiDevelopment = () => {
     reader.readAsArrayBuffer(file);
   }
 
+  const onChangeReport = (e) => setReportType(e.target.value);
+
   return (
     <>
-      <div>
-        Upload file : <input type="file" className="mb-4" onChange={handleFileUpload} title="Browse file to see charts and graphs"/>
-      </div>
-      <div className="d-flex justify-start mb-4">
-        <span>Select report type : </span>
-        <div className="ms-2">
-        <CFormSelect 
-          aria-label="Default select example"
-          options={[
-            'Open this select menu',
-            { label: 'Planned And DevDone', value: 'planned_and_devdone' },
-            { label: 'Count of Status', value: '2' },
-            { label: 'Commitment and Completed', value: 'committment_and_completed' },
-            { label: 'Count of Assignee', value: '4' }
-            ]}
-/>
+      <div className='d-flex gx-4 align-items-center'>
+        <div>
+          Upload file : <input type="file" className="mb-4" onChange={handleFileUpload} title="Browse file to see charts and graphs" />
+        </div>
+        <div className="d-flex justify-start mb-4 align-items-center">
+          <span>Select report type : </span>
+          <div className="ms-2">
+            <CFormSelect
+              aria-label="Default select example"
+              options={[
+                'Open this select menu',
+                { label: 'Planned And DevDone', value: 'planned_and_devdone' },
+                { label: 'Count of Status', value: '2' },
+                { label: 'Commitment and Completed', value: 'committment_and_completed' },
+                { label: 'Count of Assignee', value: '4' }
+              ]}
+              onChange={onChangeReport}
+            />
+          </div>
         </div>
       </div>
-      <div class="row gx-4">
-      <CCard className="mb-4">
-            <CCardBody>
-              <div className='d-flex justify-content-between mb-4'>
-                <h4 id="traffic" className="card-title mb-0">
-                  Planned And DevDone
-                </h4>
-              </div>
-              {chartDatas?.planned_and_devdone ? <CChartBar data={chartDatas?.planned_and_devdone} /> : <div className="py-4">No data available</div>}
-            </CCardBody>
-          </CCard>
+      <div className="row gx-4">
+        <CCard className="mb-4">
+          <CCardBody>
+            <div className='d-flex justify-content-between mb-4'>
+              <h4 id="traffic" className="card-title mb-0">
+                Planned And DevDone
+              </h4>
+            </div>
+            {chartDatas[reportType] ? <CChartBar data={chartDatas[reportType]} /> : <div className="py-4">No data available</div>}
+          </CCardBody>
+        </CCard>
       </div>
-      {/* <div class="row gx-4">
-        <div class="col-6">
-          <CCard className="mb-4">
-            <CCardBody>
-              <div className='d-flex justify-content-between mb-4'>
-                <h4 id="traffic" className="card-title mb-0">
-                  Planned And DevDone
-                </h4>
-              </div>
-              {chartDatas?.planned_and_devdone ? <CChartBar data={chartDatas?.planned_and_devdone} /> : <div className="py-4">No data available</div>}
-            </CCardBody>
-          </CCard>
-        </div>
-        <div class="col-6">
-          <CCard className="mb-4">
-            <CCardBody>
-              <div className='d-flex justify-content-between mb-4'>
-                <h4 id="traffic" className="card-title mb-0">
-                  Commitment and Completed
-                </h4>
-              </div>
-              {chartDatas?.committment_and_completed ? <CChartBar data={chartDatas?.committment_and_completed} /> : <div className="py-4">No data available</div>}
-            </CCardBody>
-          </CCard>
-        </div>
-      </div> */}
     </>
   )
 }
