@@ -22,6 +22,24 @@ const _nav = [
     to: '/ui-development',
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
   },
+  {
+    component: CNavItem,
+    name: 'Triage/Support',
+    to: '/',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+  },,
+  {
+    component: CNavItem,
+    name: 'Salseforce',
+    to: '/',
+    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+  },,
+  {
+    component: CNavItem,
+    name: 'Data Engineering',
+    to: '/',
+    icon: <CIcon icon={cilDescription} customClassName="nav-icon" />,
+  },
   // {
   //   component: CNavItem,
   //   name: 'Charts',
