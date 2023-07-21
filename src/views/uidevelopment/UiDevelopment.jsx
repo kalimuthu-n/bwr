@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import * as XLSX from 'xlsx'
+import Papa from 'papaparse';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import isEmpty from "lodash-es/isEmpty";
 
 import {
   CCard,
@@ -28,18 +28,24 @@ const UiDevelopment = () => {
 
     reader.onload = (e) => {
       const data = new Uint8Array(e.target.result);
-      const workbook = XLSX.read(data, { type: 'array' });
-      console.log("workbook.SheetNames", workbook.SheetNames);
-      const worksheet = workbook.Sheets[workbook.SheetNames[5]];
-      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-      console.log(jsonData);
+      let jsonData = [];
+      if (file.name.endsWith('.csv')) {
+        const csvData = e.target.result;
+        const csvResult = Papa.parse(csvData, { header: true });
+        jsonData = csvResult.data;
+      } else {
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheetIndex = workbook.SheetNames.indexOf("UI");
+        const worksheet = workbook.Sheets[workbook.SheetNames[sheetIndex]];
+        jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+      }
+      console.log("jsonData", jsonData);
       const charts = {}
       let chartName = '';
       jsonData.forEach(item => {
         if (item.length) {
           if (item.length === 1) {
             const chartNameSplited = item[0].toLowerCase().split(" ").filter(s => !!s).map(s => s.trim());
-            console.log("chartNameSplited", chartNameSplited);
             chartName = chartNameSplited.join("_");
             const chartData = {
               labels: [],
@@ -60,7 +66,7 @@ const UiDevelopment = () => {
           if (item.length > 1) {
             item.forEach((itemData, index) => {
               if (index === 0 && typeof item[index] === 'string') {
-                charts[chartName].labels.push(item[index])
+                charts[chartName].labels.push(item[index].replace("MAD UI: ", ""))
               } else {
                 charts[chartName].datasets[index - 1].data.push(itemData)
               }
@@ -71,46 +77,43 @@ const UiDevelopment = () => {
       setChartDatas(charts);
     }
 
-    reader.readAsArrayBuffer(file);
+    if (file.name.endsWith('.csv')) {
+      reader.readAsText(file);
+    } else {
+      reader.readAsArrayBuffer(file);
+    }
   }
-
-  const onChangeReport = (e) => setReportType(e.target.value);
 
   return (
     <>
-      <div className='d-flex gx-4 align-items-center'>
-        <div>
-          Upload file : <input type="file" className="mb-4" onChange={handleFileUpload} title="Browse file to see charts and graphs" />
-        </div>
-        <div className="d-flex justify-start mb-4 align-items-center">
-          <span>Select report type : </span>
-          <div className="ms-2">
-            <CFormSelect
-              aria-label="Default select example"
-              disabled={isEmpty(chartDatas)}
-              options={[
-                'Open this select menu',
-                { label: 'Planned And DevDone', value: 'planned_and_devdone' },
-                { label: 'Count of Status', value: '2' },
-                { label: 'Commitment and Completed', value: 'committment_and_completed' },
-                { label: 'Count of Assignee', value: '4' }
-              ]}
-              onChange={onChangeReport}
-            />
-          </div>
-        </div>
+      <div>
+        Upload file : <input type="file" className="mb-4" onChange={handleFileUpload} title="Browse file to see charts and graphs" />
       </div>
       <div className="row gx-4">
-        <CCard className="mb-4">
-          <CCardBody>
-            <div className='d-flex justify-content-between mb-4'>
-              <h4 id="traffic" className="card-title mb-0">
-                Planned And DevDone
-              </h4>
-            </div>
-            {chartDatas[reportType] ? <CChartBar data={chartDatas[reportType]} /> : <div className="py-4">No data available</div>}
-          </CCardBody>
-        </CCard>
+        <div className='col-6'>
+          <CCard className="mb-4">
+            <CCardBody>
+              <div className='d-flex justify-content-between mb-4'>
+                <h4 id="traffic" className="card-title mb-0">
+                  MAD-UI: Planned And DevDone
+                </h4>
+              </div>
+              {chartDatas?.planned_and_devdone ? <CChartBar data={chartDatas?.planned_and_devdone} /> : <div className="py-4">No data available</div>}
+            </CCardBody>
+          </CCard>
+        </div>
+        <div className='col-6'>
+          <CCard className="mb-4">
+            <CCardBody>
+              <div className='d-flex justify-content-between mb-4'>
+                <h4 id="traffic" className="card-title mb-0">
+                  MAD-UI: Committment and Completed
+                </h4>
+              </div>
+              {chartDatas?.committment_and_completed ? <CChartBar data={chartDatas?.committment_and_completed} /> : <div className="py-4">No data available</div>}
+            </CCardBody>
+          </CCard>
+        </div>
       </div>
     </>
   )
