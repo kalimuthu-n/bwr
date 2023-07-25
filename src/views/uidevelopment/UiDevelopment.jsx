@@ -43,9 +43,20 @@ const UiDevelopment = () => {
             },
           ],
         },
+        count_of_assignee: {
+          labels: ['Pradip Bakal', 'Kalimuthu'],
+          datasets: [
+            {
+              label: '',
+              backgroundColor: ['#6aa84f', '#50c878'],
+              data: [],
+            },
+          ],
+        },
       }
       let chartName = ''
       const statusCount = { done: 0, in_testing: 0, in_review: 0 }
+      const assigneeCount = { pradipBakal: 0, kalimuthu: 0 }
       jsonData.forEach((item) => {
         if (item.length) {
           if (item.length === 1) {
@@ -85,6 +96,7 @@ const UiDevelopment = () => {
                 }
               })
             } else {
+              //For count_of_status
               statusCount.done = item.includes('Done') ? statusCount.done + 1 : statusCount.done
               statusCount.in_testing = item.includes('In Testing')
                 ? statusCount.in_testing + 1
@@ -92,14 +104,27 @@ const UiDevelopment = () => {
               statusCount.in_review = item.includes('In Review')
                 ? statusCount.in_review + 1
                 : statusCount.in_review
+              //For count_of_assignee
+              assigneeCount.pradipBakal = item.includes('pradip.bakal')
+                ? assigneeCount.pradipBakal + 1
+                : assigneeCount.pradipBakal
+              assigneeCount.kalimuthu = item.includes('kalimuthu')
+                ? assigneeCount.kalimuthu + 1
+                : assigneeCount.kalimuthu
             }
           }
         }
       })
+      //For count_of_status
       charts.count_of_status.datasets[0].data = [
         statusCount.done,
         statusCount.in_testing,
         statusCount.in_review,
+      ]
+      //For count_of_assignee
+      charts.count_of_assignee.datasets[0].data = [
+        assigneeCount.pradipBakal,
+        assigneeCount.kalimuthu,
       ]
       setChartDatas(charts)
     }
@@ -127,7 +152,7 @@ const UiDevelopment = () => {
             <CCardBody>
               <div className="d-flex justify-content-between mb-4">
                 <h4 id="traffic" className="card-title mb-0">
-                  MAD-UI: Planned And DevDone
+                  Planned And DevDone
                 </h4>
               </div>
               {chartDatas?.planned_and_devdone ? (
@@ -143,7 +168,7 @@ const UiDevelopment = () => {
             <CCardBody>
               <div className="d-flex justify-content-between mb-4">
                 <h4 id="traffic" className="card-title mb-0">
-                  MAD-UI: Committment and Completed
+                  Committment and Completed
                 </h4>
               </div>
               {chartDatas?.committment_and_completed ? (
@@ -159,11 +184,27 @@ const UiDevelopment = () => {
             <CCardBody>
               <div className="d-flex justify-content-between mb-4">
                 <h4 id="traffic" className="card-title mb-0">
-                  MAD-UI: Count Of Status
+                  Count Of Status
                 </h4>
               </div>
               {chartDatas?.count_of_status?.datasets[0]?.data.length ? (
                 <CChartPie data={chartDatas?.count_of_status} />
+              ) : (
+                <div className="py-4">No data available</div>
+              )}
+            </CCardBody>
+          </CCard>
+        </div>
+        <div className="col-6">
+          <CCard className="mb-4">
+            <CCardBody>
+              <div className="d-flex justify-content-between mb-4">
+                <h4 id="traffic" className="card-title mb-0">
+                  Count Of Assignee
+                </h4>
+              </div>
+              {chartDatas?.count_of_assignee?.datasets[0]?.data.length ? (
+                <CChartBar data={chartDatas?.count_of_assignee} />
               ) : (
                 <div className="py-4">No data available</div>
               )}
